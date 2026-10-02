@@ -1040,30 +1040,6 @@ export const CreateCycleWizardView: React.FC<CreateCycleWizardViewProps> = ({
     <div className="toggle-switch-knob" />
   </button>
 </div>
-
-<div className="toggle-setting-row">
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-    <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-primary)' }}>
-      Show competency scores to employee
-    </span>
-    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-      Employees can see detailed competency ratings once the review is finalized for this cycle.
-    </span>
-  </div>
-  <button
-    type="button"
-    className={`toggle-switch-btn ${formData.showCompetencyScoresToEmployee !== false ? 'is-active' : ''}`}
-    onClick={() =>
-      setFormData({
-        ...formData,
-        showCompetencyScoresToEmployee: !formData.showCompetencyScoresToEmployee
-      })
-    }
-    aria-label="Toggle show competency scores to employee"
-  >
-    <div className="toggle-switch-knob" />
-  </button>
-</div>
               </div>
             </div>
 
