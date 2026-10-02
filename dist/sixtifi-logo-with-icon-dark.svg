@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700&amp;display=swap');
+      .logo-text {
+        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 700;
+        font-size: 36px;
+        fill: #FFFFFF;
+        letter-spacing: -1.5px;
+      }
+      .logo-dot {
+        fill: #41A4E3;
+      }
+    </style>
+    <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#41A4E3" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+  </defs>
+
+  <!-- Scaled Brand Icon on the Left -->
+  <g transform="translate(12, 10) scale(0.4)">
+    <path d="M 70,15 
+             L 45,15 
+             C 32,15 25,23 25,35 
+             C 25,47 33,50 45,50 
+             L 55,50 
+             C 67,50 75,53 75,65 
+             C 75,77 68,85 45,85 
+             L 30,85" 
+          fill="none" stroke="url(#brand-grad)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="78" cy="15" r="7" fill="#41A4E3" />
+  </g>
+
+  <!-- Logo Text on the Right -->
+  <text x="62" y="42" class="logo-text">Sixtifi<tspan class="logo-dot">.</tspan></text>
+</svg>

@@ -1,0 +1,339 @@
+/* ==========================================================================
+   Sixtifi Sidebar — Performance Management Module
+   ========================================================================== */
+
+.sixtifi-sidebar {
+  width: 240px;
+  background-color: var(--bg-sidebar);
+  color: #94A3B8;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  flex-shrink: 0;
+  transition: width var(--transition-normal);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  user-select: none;
+}
+
+.sixtifi-sidebar.is-collapsed {
+  width: 64px;
+}
+
+/* ── Brand Header ── */
+.sidebar-brand {
+  height: 64px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.brand-logo-img-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 164, 228, 0.25);
+}
+
+.sidebar-brand-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.brand-text-group {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.brand-name-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.brand-name {
+  color: #FFFFFF;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.brand-dot {
+  color: #00A4E4; /* Official Sixtifi Cyan Dot */
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.brand-module-tag {
+  color: #38BDF8; /* Sixtifi signature cyan */
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+/* ── Navigation Container ── */
+.sidebar-nav-container {
+  flex: 1;
+  padding: 16px 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sidebar-nav-container::-webkit-scrollbar {
+  width: 0;
+}
+
+/* ── Nav Group ── */
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nav-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-group-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px 4px;
+  display: block;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── Nav Item Button ── */
+.nav-item-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  color: #94A3B8;
+  font-size: 0.835rem;
+  font-weight: 500;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.nav-item-btn:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #F1F5F9;
+}
+
+.nav-item-btn.is-active {
+  background-color: rgba(0, 164, 228, 0.16);
+  color: #38BDF8;
+  font-weight: 600;
+}
+
+.nav-item-btn.is-active .nav-icon {
+  color: #00A4E4;
+}
+
+.nav-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.nav-item-btn:hover .nav-icon,
+.nav-item-btn.is-active .nav-icon {
+  opacity: 1;
+}
+
+.nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Module Accordion & Performance Specific */
+.module-accordion-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: var(--radius-md);
+}
+
+.module-header-btn {
+  position: relative;
+}
+
+.module-tag-indicator {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background-color: rgba(0, 164, 228, 0.18);
+  color: #00A4E4;
+  border: 1px solid rgba(0, 164, 228, 0.35);
+  letter-spacing: 0.04em;
+  margin-right: 4px;
+}
+
+.module-chevron {
+  display: flex;
+  align-items: center;
+  color: #64748B;
+  transition: transform var(--transition-fast);
+}
+
+.module-header-btn:hover .module-chevron,
+.module-header-btn.is-active .module-chevron {
+  color: #38BDF8;
+}
+
+/* ── Submenu List & Items ── */
+.submenu-list {
+  list-style: none;
+  padding: 2px 0 2px 14px;
+  margin: 2px 0 4px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 1px solid rgba(0, 164, 228, 0.25);
+  position: relative;
+}
+
+.submenu-item-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  color: #94A3B8;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.submenu-item-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #F8FAFC;
+}
+
+.submenu-item-btn.is-active {
+  background-color: rgba(0, 164, 228, 0.2);
+  color: #BAE6FD;
+  font-weight: 600;
+}
+
+.submenu-bullet-icon {
+  display: flex;
+  align-items: center;
+  color: #64748B;
+  transition: color var(--transition-fast);
+}
+
+.submenu-item-btn:hover .submenu-bullet-icon,
+.submenu-item-btn.is-active .submenu-bullet-icon {
+  color: #00A4E4;
+}
+
+.submenu-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Badges ── */
+.count-badge {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background-color: rgba(0, 164, 228, 0.18);
+  color: #38BDF8;
+  line-height: 1.4;
+  margin-left: auto;
+}
+
+/* ── Sidebar Footer ── */
+.sidebar-footer {
+  padding: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.sidebar-collapse-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  border-radius: var(--radius-md);
+  color: #475569;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-collapse-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #94A3B8;
+}
+
+.sixtifi-sidebar.is-collapsed .nav-item-btn {
+  padding: 9px;
+  justify-content: center;
+}

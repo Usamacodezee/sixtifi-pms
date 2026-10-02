@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@800&amp;display=swap');
+      .icon-text {
+        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 78px;
+        fill: #0F172A;
+      }
+      .icon-dot {
+        fill: #41A4E3;
+      }
+    </style>
+  </defs>
+  <text x="50" y="75" text-anchor="middle" class="icon-text">S<tspan class="icon-dot">.</tspan></text>
+</svg>

@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production build
+dist/
+
+# IDE / System
+.DS_Store
+.claude/
+*.log

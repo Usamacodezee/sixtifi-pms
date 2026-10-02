@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(lsof -ti:3001 -sTCP:LISTEN)",
+      "Bash(xargs -r kill)",
+      "Bash(rm -rf /tmp/pw-check)",
+      "Bash(npx tsc *)",
+      "Bash(mkdir -p /tmp/pw-check2)",
+      "Read(//tmp/**)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Read(//tmp/pw-check2/**)",
+      "Bash(node drive.mjs)",
+      "Bash(mkdir -p /tmp/pw-check4)",
+      "Bash(mkdir -p /tmp/pw-check5)",
+      "Bash(mkdir -p /tmp/pw-check7)"
+    ]
+  }
+}

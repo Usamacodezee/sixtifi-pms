@@ -1,0 +1,400 @@
+/* ==========================================================================
+   Sixtifi Cycle Goals Tab & Goal Detail Page Styles
+   ========================================================================== */
+
+.cycle-goals-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  animation: fadeIn 150ms ease-out forwards;
+}
+
+/* ── 1. Tab Inner Header ── */
+.goals-tab-inner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.goals-tab-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.goals-tab-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.goals-tab-sub {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── 2. Summary Metrics 4-Grid ── */
+.goals-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 1024px) {
+  .goals-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .goals-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.goal-metric-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3-5) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+}
+
+.goal-metric-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.goal-metric-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.goal-metric-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.goal-metric-val {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.goal-metric-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.goal-metric-icon.blue {
+  background-color: #E0F2FE;
+  color: #0284C7;
+}
+
+.goal-metric-icon.green {
+  background-color: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.goal-metric-icon.amber {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.goal-metric-icon.red {
+  background-color: #FEE2E2;
+  color: #DC2626;
+}
+
+/* ── 3. Goal Progress Distribution Overview Card ── */
+.goal-distribution-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.distribution-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.distribution-title {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.distribution-bar-track {
+  height: 10px;
+  width: 100%;
+  border-radius: var(--radius-full);
+  display: flex;
+  overflow: hidden;
+  background-color: var(--bg-subtle);
+  gap: 2px;
+}
+
+.distribution-segment {
+  height: 100%;
+  transition: width var(--transition-normal);
+}
+
+.distribution-segment.on-track {
+  background-color: #10B981;
+}
+
+.distribution-segment.at-risk {
+  background-color: #F59E0B;
+}
+
+.distribution-segment.needs-attention {
+  background-color: #EF4444;
+}
+
+.distribution-legend-grid {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.distribution-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.legend-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+}
+
+.legend-color-dot.on-track {
+  background-color: #10B981;
+}
+
+.legend-color-dot.at-risk {
+  background-color: #F59E0B;
+}
+
+.legend-color-dot.needs-attention {
+  background-color: #EF4444;
+}
+
+.legend-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.legend-percent {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-family-mono);
+}
+
+/* ── 4. Goals Table Layout ── */
+.goal-cell-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.goal-cell-title:hover {
+  color: var(--color-brand-cyan);
+  text-decoration: underline;
+}
+
+.goal-cell-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.goal-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 100px;
+}
+
+.goal-progress-num {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  font-family: var(--font-family-mono);
+  min-width: 32px;
+}
+
+/* ── 5. Dedicated Goal Detail Page ── */
+.goal-detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+.goal-performance-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.goal-perf-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .goal-perf-metrics-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.goal-perf-metric-box {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.goal-perf-lbl {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.goal-perf-val {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* Timeline History */
+.goal-history-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: relative;
+  padding-left: var(--space-4);
+}
+
+.goal-history-timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background-color: var(--border-default);
+}
+
+.timeline-event-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+}
+
+.timeline-event-item::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-cyan);
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 0 1px var(--color-brand-cyan);
+}
+
+.timeline-date-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.timeline-comment-box {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-2-5) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Manager Comment Card */
+.manager-comment-box {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-left: 3px solid var(--color-brand-cyan);
+  border-radius: var(--radius-md);
+  padding: var(--space-3-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.manager-comment-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.manager-comment-quote {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.5;
+}

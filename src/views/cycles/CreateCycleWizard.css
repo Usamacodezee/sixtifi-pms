@@ -1,0 +1,664 @@
+/* ==========================================================================
+   Sixtifi Create Appraisal Cycle Wizard Styles
+   ========================================================================== */
+
+.create-cycle-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+/* ── 1. Stepper Header ── */
+.wizard-stepper-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-6);
+  box-shadow: var(--shadow-xs);
+}
+
+.stepper-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  position: relative;
+  z-index: 2;
+  background-color: var(--bg-surface);
+  padding: 0 var(--space-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.step-item.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.step-number-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  border: 2px solid var(--border-default);
+  background-color: var(--bg-subtle);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.step-item.is-current .step-number-circle {
+  border-color: var(--color-brand-cyan);
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
+  box-shadow: 0 0 0 3px rgba(0, 164, 228, 0.2);
+}
+
+.step-item.is-completed .step-number-circle {
+  border-color: #10B981;
+  background-color: #ECFDF5;
+  color: #047857;
+}
+
+.step-label-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.step-index-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.step-title {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.step-item.is-current .step-title {
+  color: var(--color-primary-700);
+  font-weight: 700;
+}
+
+.step-connector-line {
+  flex: 1;
+  height: 2px;
+  background-color: var(--border-default);
+  margin: 0 var(--space-2);
+  transition: background-color var(--transition-normal);
+}
+
+.step-connector-line.is-active {
+  background-color: #10B981;
+}
+
+@media (max-width: 768px) {
+  .step-label-group {
+    display: none;
+  }
+}
+
+/* ── 2. Form Layout & Fields ── */
+.wizard-content-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.form-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--space-4);
+}
+
+.form-section-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.form-section-subtitle {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+}
+
+.form-field-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.required-asterisk {
+  color: #EF4444;
+}
+
+.form-input-text,
+.form-input-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+.form-input-text:focus,
+.form-input-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  background-color: var(--bg-surface);
+  box-shadow: 0 0 0 3px rgba(0, 164, 228, 0.15);
+}
+
+.form-input-text.has-error,
+.form-input-select.has-error {
+  border-color: #EF4444;
+  background-color: #FEF2F2;
+}
+
+.form-field-error {
+  font-size: 0.7rem;
+  color: #EF4444;
+  font-weight: 500;
+}
+
+.form-field-helper {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ── 3. Step 2: Employee Selection Modes ── */
+.selection-modes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .selection-modes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .selection-modes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.selection-mode-card {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3-5) var(--space-4);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.selection-mode-card:hover {
+  background-color: var(--bg-surface);
+  border-color: var(--border-strong);
+}
+
+.selection-mode-card.is-selected {
+  background-color: var(--color-primary-50);
+  border-color: var(--color-brand-cyan);
+  box-shadow: 0 0 0 1px var(--color-brand-cyan);
+}
+
+.mode-radio-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-neutral-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.selection-mode-card.is-selected .mode-radio-circle {
+  border-color: var(--color-brand-cyan);
+}
+
+.mode-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-cyan);
+}
+
+.mode-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mode-title {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.mode-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Multi-select Grid for Departments & Designations */
+.multiselect-pill-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2-5);
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 800px) {
+  .multiselect-pill-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.multiselect-item-pill {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-2-5) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.multiselect-item-pill:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-subtle);
+}
+
+.multiselect-item-pill.is-selected {
+  background-color: #E0F2FE;
+  border-color: #0284C7;
+}
+
+.pill-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.pill-count-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-subtle);
+  color: var(--text-muted);
+}
+
+.multiselect-item-pill.is-selected .pill-count-badge {
+  background-color: #BAE6FD;
+  color: #0369A1;
+}
+
+/* Specific Employee Selection Table */
+.employee-select-table-box {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-top: var(--space-3);
+}
+
+.employee-table-toolbar {
+  padding: var(--space-2-5) var(--space-4);
+  background-color: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.employee-table-scroll {
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+/* ── 4. Step 3: Performance Setup Styles ── */
+.component-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .component-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.component-card {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.component-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background-color: #E0F2FE;
+  color: #0284C7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.component-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.component-title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.component-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Weightage Configuration Section */
+.weightage-config-box {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.weightage-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.weightage-label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.weightage-input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.weightage-input {
+  width: 72px;
+  padding: 0.4rem 0.6rem;
+  text-align: right;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
+}
+
+.weightage-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+}
+
+.weightage-total-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-default);
+}
+
+.weightage-total-text-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+/* Review Flow Diagram */
+.review-flow-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.flow-step-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  flex: 1;
+  min-width: 140px;
+  gap: 4px;
+}
+
+.flow-step-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-primary-700);
+  background-color: var(--color-primary-50);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+
+.flow-step-title {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.flow-arrow-icon {
+  color: var(--color-neutral-400);
+  flex-shrink: 0;
+}
+
+/* Toggle Switch Row */
+.toggle-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3-5) var(--space-4);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.toggle-switch-btn {
+  width: 44px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-neutral-300);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--transition-fast);
+}
+
+.toggle-switch-btn.is-active {
+  background-color: var(--color-brand-cyan);
+}
+
+.toggle-switch-knob {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch-btn.is-active .toggle-switch-knob {
+  transform: translateX(20px);
+}
+
+/* ── 5. Step 4: Summary Card Styles ── */
+.review-summary-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.summary-block-card {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.summary-block-title {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--space-2);
+}
+
+.summary-kv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3) var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .summary-kv-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary-kv-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summary-k-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.summary-v-val {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ── 6. Bottom Navigation Bar ── */
+.wizard-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.wizard-footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}

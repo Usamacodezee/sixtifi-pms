@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 50" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700&amp;display=swap');
+      .logo-text {
+        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 700;
+        font-size: 38px;
+        fill: #0F172A;
+        letter-spacing: -1.8px;
+      }
+      .logo-dot {
+        fill: #41A4E3;
+      }
+    </style>
+  </defs>
+  <text x="5" y="38" class="logo-text">Sixtifi<tspan class="logo-dot">.</tspan></text>
+</svg>

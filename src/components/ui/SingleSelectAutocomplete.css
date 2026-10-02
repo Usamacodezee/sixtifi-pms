@@ -1,0 +1,191 @@
+/* ==========================================================================
+   SingleSelectAutocomplete Component Styles
+   ========================================================================== */
+
+.single-autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+.single-autocomplete-input-wrap {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background-color: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  transition: all 150ms ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.single-autocomplete-input-wrap:hover {
+  border-color: #94a3b8;
+}
+
+.single-autocomplete-container.is-open .single-autocomplete-input-wrap {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.single-autocomplete-container.has-error .single-autocomplete-input-wrap {
+  border-color: #ef4444;
+}
+
+.single-autocomplete-container.is-disabled .single-autocomplete-input-wrap {
+  background-color: var(--bg-subtle, #f8fafc);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.single-autocomplete-input {
+  flex: 1;
+  width: 100%;
+  padding: 8px 36px 8px 12px;
+  font-size: var(--text-xs, 0.8125rem);
+  color: var(--text-primary, #0f172a);
+  background: transparent;
+  border: none;
+  outline: none;
+  border-radius: var(--radius-md, 8px);
+}
+
+.single-autocomplete-input::placeholder {
+  color: var(--text-muted, #94a3b8);
+}
+
+.single-autocomplete-actions {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted, #94a3b8);
+  pointer-events: none;
+}
+
+.single-autocomplete-clear-btn {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 120ms ease, background 120ms ease;
+}
+
+.single-autocomplete-clear-btn:hover {
+  color: #0f172a;
+  background-color: #e2e8f0;
+}
+
+.single-autocomplete-chevron {
+  transition: transform 150ms ease;
+}
+
+.single-autocomplete-chevron.is-expanded {
+  transform: rotate(180deg);
+  color: #0284c7;
+}
+
+/* ── Dropdown ── */
+.single-autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: #ffffff;
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.single-autocomplete-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 100ms ease;
+}
+
+.single-autocomplete-option.is-highlighted {
+  background-color: #f1f5f9;
+}
+
+.single-autocomplete-option.is-selected {
+  background-color: #f0f9ff;
+  color: #0284c7;
+  font-weight: 600;
+}
+
+.single-autocomplete-option.is-all-option {
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 2px;
+}
+
+.single-autocomplete-option.is-all-option .single-autocomplete-option-label {
+  color: #0369a1;
+  font-weight: 600;
+}
+
+.single-autocomplete-all-icon {
+  color: #0284c7;
+  margin-right: 6px;
+}
+
+.single-autocomplete-option-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.single-autocomplete-option-label {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #1e293b;
+}
+
+.single-autocomplete-option-sub {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+.single-autocomplete-check-icon {
+  color: #0284c7;
+  flex-shrink: 0;
+}
+
+.single-autocomplete-empty {
+  padding: 12px;
+  font-size: 0.78rem;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.single-autocomplete-custom-btn {
+  background-color: #f0f9ff;
+  color: #0284c7;
+  border: 1px dashed #7dd3fc;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.single-autocomplete-custom-btn:hover {
+  background-color: #e0f2fe;
+}

@@ -1,0 +1,332 @@
+/* ==========================================================================
+   Sixtifi Cycle Reviews Tab & Review Detail Inspection Styles
+   ========================================================================== */
+
+.cycle-reviews-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  animation: fadeIn 150ms ease-out forwards;
+}
+
+/* ── 1. Tab Inner Header ── */
+.reviews-tab-inner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.reviews-tab-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reviews-tab-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.reviews-tab-sub {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── 2. Summary Metrics 4-Grid ── */
+.reviews-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 1024px) {
+  .reviews-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .reviews-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.review-metric-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3-5) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+}
+
+.review-metric-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.review-metric-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.review-metric-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.review-metric-val {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.review-metric-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.review-metric-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.review-metric-icon.green {
+  background-color: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.review-metric-icon.blue {
+  background-color: #E0F2FE;
+  color: #0284C7;
+}
+
+.review-metric-icon.purple {
+  background-color: #F5F3FF;
+  color: #7C3AED;
+}
+
+.review-metric-icon.red {
+  background-color: #FEE2E2;
+  color: #DC2626;
+}
+
+/* ── 3. Review Stage Progress Overview ── */
+.review-stage-progress-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3-5);
+}
+
+.stage-progress-3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 800px) {
+  .stage-progress-3-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stage-progress-box {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-3-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stage-box-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stage-box-title-text {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.stage-box-percent-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--font-family-mono);
+  color: var(--color-primary-700);
+}
+
+.stage-box-count-text {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ── 4. Reviews Requiring Attention Section ── */
+.attention-section-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.attention-grid-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .attention-grid-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.attention-item-card {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-3-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.attention-item-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+}
+
+/* ── 5. Review Detail Inspection Page ── */
+.review-detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+.review-timeline-flow-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.timeline-steps-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding: var(--space-2) 0;
+}
+
+.timeline-step-node {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  flex: 1;
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.timeline-step-node.is-active {
+  background-color: #E0F2FE;
+  border-color: #0284C7;
+}
+
+.timeline-node-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.timeline-node-title {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.timeline-node-date {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* Comments Preview Cards */
+.comments-preview-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3-5);
+}
+
+.comment-preview-box {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.comment-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.comment-author-title {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.comment-quote-text {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-style: italic;
+}

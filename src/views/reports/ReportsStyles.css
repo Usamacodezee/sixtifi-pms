@@ -1,0 +1,113 @@
+/* ==========================================================================
+   Sixtifi Performance Reports Styles
+   ========================================================================== */
+
+.reports-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+/* ── Top Filter Bar ── */
+.reports-filter-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-xs);
+}
+
+.reports-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.reports-filter-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Simple Bar Row (Review Completion / Goal Performance / Rating Distribution) ── */
+.report-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.report-bar-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+}
+
+.report-bar-row-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.report-bar-row-value {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-family-mono);
+}
+
+/* ── Goal Performance Stat Tiles ── */
+.goal-perf-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 700px) {
+  .goal-perf-tiles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.goal-perf-tile {
+  padding: var(--space-3) var(--space-3-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.goal-perf-tile-value {
+  font-size: var(--text-xl);
+  font-weight: 800;
+}
+
+.goal-perf-tile-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ── Export Menu ── */
+.export-menu-wrap {
+  position: relative;
+}
+
+/* ── Empty State ── */
+.reports-empty-state {
+  padding: 56px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}

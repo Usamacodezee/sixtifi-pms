@@ -1,0 +1,571 @@
+/* ==========================================================================
+   Sixtifi Performance Settings Styles
+   ========================================================================== */
+
+.settings-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+/* ── Settings Shell: Left Nav + Content ── */
+.settings-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .settings-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+.settings-nav {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: var(--shadow-xs);
+  position: sticky;
+  top: var(--space-4);
+}
+
+@media (max-width: 860px) {
+  .settings-nav {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 4px;
+  }
+}
+
+.settings-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.settings-nav-item:hover {
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.settings-nav-item.is-active {
+  background-color: #E0F2FE;
+  color: #0369A1;
+}
+
+.settings-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.settings-nav-parent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.settings-nav-parent:hover {
+  background-color: var(--bg-subtle);
+}
+
+.settings-nav-parent.is-group-active {
+  color: #0369A1;
+}
+
+.settings-nav-chevron {
+  margin-left: auto;
+  display: inline-flex;
+  color: var(--text-muted);
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.settings-nav-chevron:hover {
+  background: var(--bg-muted, #f1f5f9);
+  color: var(--text-primary);
+}
+
+.settings-nav-children {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 8px;
+  margin-bottom: 2px;
+}
+
+.settings-nav-item.is-child {
+  padding-left: 18px;
+  font-weight: 550;
+}
+
+.settings-embedded-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.settings-embedded-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.settings-embedded-title {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.settings-embedded-subtitle {
+  margin: 4px 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  max-width: 52ch;
+}
+
+.perf-module-page.is-embedded {
+  gap: var(--space-4);
+  padding-bottom: 0;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.settings-section-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.settings-section-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ── Targeting Chain Visual (Company > Dept > Designation > Grade > Review Type) ── */
+.targeting-chain {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: var(--space-3) var(--space-4);
+  background-color: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  border-radius: var(--radius-md);
+}
+
+.targeting-chain-item {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #0369A1;
+  background-color: #FFFFFF;
+  border: 1px solid #BAE6FD;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.targeting-chain-arrow {
+  color: #7DD3FC;
+  font-size: 0.8rem;
+}
+
+/* ── Toggle Rows Stack ── */
+.settings-toggle-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Weight Split Bar ── */
+.weight-split-bar {
+  display: flex;
+  height: 10px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+}
+
+/* ── Rating Label Config Rows ── */
+.rating-label-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2-5) var(--space-3-5);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.rating-label-num {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-full);
+  background-color: #0284C7;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Final Rating Mapping Rows ── */
+.mapping-row {
+  display: grid;
+  grid-template-columns: 90px 90px 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2-5) var(--space-3-5);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 640px) {
+  .mapping-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.mapping-row-arrow {
+  display: none;
+}
+
+/* ── Question Builder ── */
+.question-builder-item {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.question-builder-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.question-builder-index {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.question-builder-remove {
+  color: #DC2626;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* ── Category Pills for Competency Table ── */
+.category-pill {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
+.category-pill.behavioral {
+  background-color: #EFF6FF;
+  color: #1D4ED8;
+}
+
+.category-pill.leadership {
+  background-color: #F5F3FF;
+  color: #6D28D9;
+}
+
+.category-pill.functional {
+  background-color: #ECFDF5;
+  color: #047857;
+}
+
+/* ── Multi-select Field (Applicability / Competency picker) ── */
+.multiselect-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.multiselect-box {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-subtle);
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.multiselect-option-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  padding: 8px 12px;
+  font-size: var(--text-xs);
+  color: var(--text-primary);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.multiselect-option-row:last-child {
+  border-bottom: none;
+}
+
+.multiselect-option-row:hover {
+  background-color: var(--bg-surface);
+}
+
+.multiselect-option-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.multiselect-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.multiselect-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #E0F2FE;
+  color: #0369A1;
+  border: 1px solid #BAE6FD;
+  padding: 3px 6px 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.multiselect-pill button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #0369A1;
+  padding: 2px;
+}
+
+.multiselect-empty {
+  padding: 10px 12px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ── Level Editor ── */
+.level-editor-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-3-5);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.level-editor-badge {
+  width: 68px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-top: 4px;
+}
+
+.level-editor-num {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  background-color: #0284C7;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.level-editor-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* ── Priority Chain (vertical) ── */
+.priority-chain-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.priority-chain-arrow-v {
+  color: #7DD3FC;
+  font-size: 0.85rem;
+  padding-left: 14px;
+}
+
+/* ── Empty inline placeholder ── */
+.settings-inline-placeholder {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ── Review Flow option cards ── */
+.review-flow-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-flow-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.review-flow-option:hover {
+  border-color: #7DD3FC;
+  background: #F8FBFF;
+}
+
+.review-flow-option.is-selected {
+  border-color: #0284C7;
+  background: #F0F9FF;
+  box-shadow: 0 0 0 1px #0284C7 inset;
+}
+
+.review-flow-option-radio {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border-radius: 999px;
+  border: 2px solid #94A3B8;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.review-flow-option.is-selected .review-flow-option-radio {
+  border-color: #0284C7;
+}
+
+.review-flow-option.is-selected .review-flow-option-radio::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 999px;
+  background: #0284C7;
+}
+
+.review-flow-option-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.review-flow-option-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.review-flow-option-path {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0284C7;
+}
+
+.review-flow-option-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.review-flow-option-stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
