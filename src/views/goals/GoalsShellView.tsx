@@ -130,10 +130,6 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
     () => getOverallGoalsForCompany(overallGoals, company.id),
     [overallGoals, company.id]
   );
-  const teamOkrs = useMemo(
-    () => getTeamGoalsForCompany(teamGoals, company.id),
-    [teamGoals, company.id]
-  );
   const memberRows = useMemo(
     () => teamMemberGoals.filter((r) => r.companyId === company.id),
     [teamMemberGoals, company.id]
@@ -149,7 +145,9 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
     progress: g.progress,
     status: g.status,
     dueDate: g.dueDate,
-    weight: g.weight
+    weight: g.weight,
+    cycleId: g.cycleId || 'cycle-1',
+    cycleName: g.cycleName || 'FY 2026–27 Annual Performance Review'
   }));
 
   const teamCards: SimpleGoalCard[] = memberRows.map((row) => ({
@@ -159,7 +157,9 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
     target: row.target,
     progress: row.progress,
     status: row.status,
-    weight: row.weight
+    weight: row.weight,
+    cycleId: row.cycleId || 'cycle-1',
+    cycleName: row.cycleName || 'FY 2026–27 Annual Performance Review'
   }));
 
   const companyCards: SimpleGoalCard[] = companyGoals.map((g) => ({
@@ -172,7 +172,9 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
     progress: g.progress,
     status: g.status,
     dueDate: g.dueDate,
-    weight: g.weight
+    weight: g.weight,
+    cycleId: g.cycleId || 'cycle-1',
+    cycleName: g.cycleName || 'FY 2026–27 Annual Performance Review'
   }));
 
   const counts: Record<GoalsTab, number> = {
@@ -188,6 +190,8 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
       const goal: MyGoalItem = {
         id: `my-goal-${Date.now()}`,
         companyId: company.id,
+        cycleId: values.cycleId || 'cycle-1',
+        cycleName: values.cycleName || 'FY 2026–27 Annual Performance Review',
         title: values.title,
         description: values.description || 'Personal performance goal.',
         target: values.target,
@@ -205,19 +209,21 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
       onShowToast?.(
         'success',
         'Goal added',
-        `"${goal.title}" created successfully.`
+        `"${goal.title}" created for ${goal.cycleName} and assigned to ${SELF_NAME}.`
       );
     }
 
     if (createMode === 'team') {
       const person = assignees.find((a) => a.id === values.assigneeId) || assignees[0];
       if (!person) {
-        onShowToast?.('error', 'No assignee', 'Select a team member.');
+        onShowToast?.('error', 'No assignee', 'Select an employee within the cycle scope.');
         return;
       }
       const row: TeamMemberGoalRow = {
         id: `tm-goal-${Date.now()}`,
         companyId: company.id,
+        cycleId: values.cycleId || 'cycle-1',
+        cycleName: values.cycleName || 'FY 2026–27 Annual Performance Review',
         employeeId: person.id,
         employeeName: person.name,
         employeeCode: person.employeeCode,
@@ -235,18 +241,24 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
       onShowToast?.(
         'success',
         'Team goal added',
-        `"${row.goalTitle}" assigned to ${person.name}.`
+        `"${row.goalTitle}" (${values.cycleName || 'FY 2026–27'}) assigned to ${person.name}.`
       );
     }
 
     if (createMode === 'overall') {
+      const person = assignees.find((a) => a.id === values.assigneeId);
+      const ownerName = person ? person.name : (values.owner || SELF_NAME);
+      const ownerRole = person ? person.designation : (values.ownerRole || 'Leadership');
+
       const goal: OverallGoal = {
         id: `og-${Date.now()}`,
         companyId: company.id,
+        cycleId: values.cycleId || 'cycle-1',
+        cycleName: values.cycleName || 'FY 2026–27 Annual Performance Review',
         title: values.title,
         description: values.description || 'Strategic objective.',
-        owner: values.owner,
-        ownerRole: values.ownerRole || 'Leadership',
+        owner: ownerName,
+        ownerRole: ownerRole,
         target: values.target,
         currentAchievement: '0',
         progress: 0,
@@ -258,7 +270,7 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
         history: []
       };
       onCreateOverallGoal(goal);
-      onShowToast?.('success', 'Overall goal added', `"${goal.title}" saved for ${company.name}.`);
+      onShowToast?.('success', 'Company goal added', `"${goal.title}" (${values.cycleName || 'FY 2026–27'}) assigned to ${ownerName} for ${company.name}.`);
     }
 
     setCreateMode(null);
@@ -339,39 +351,25 @@ export const GoalsShellView: React.FC<GoalsShellViewProps> = ({
       )}
 
       {activeTab === 'team' && perms.canViewTeamGoals && (
-        <>
-          {teamOkrs.length > 0 && (
-            <div className="goals-focus-strip" aria-label="Team priorities">
-              <span className="goals-focus-label">Team focus</span>
-              <div className="goals-focus-items">
-                {teamOkrs.slice(0, 3).map((t) => (
-                  <span key={t.id} className="goals-focus-chip" title={t.description}>
-                    {t.teamName}: {t.progress}%
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          <SimpleGoalsPanel
-            goals={teamCards}
-            searchPlaceholder="Search team goals…"
-            emptyTitle="No team goals"
-            emptyHint="Assign a goal to someone on your team."
-            metaColumnLabel="Assignee"
-            primaryActionLabel={canAddTeam ? 'Add Goal' : undefined}
-            onPrimaryAction={canAddTeam ? () => setCreateMode('team') : undefined}
-            onOpenGoal={(id) => onNavigate(`/performance/goals/${id}`)}
-          />
-        </>
+        <SimpleGoalsPanel
+          goals={teamCards}
+          searchPlaceholder="Search team goals…"
+          emptyTitle="No team goals"
+          emptyHint="Assign a goal to someone on your team within cycle scope."
+          metaColumnLabel="Assignee"
+          primaryActionLabel={canAddTeam ? 'Add Goal' : undefined}
+          onPrimaryAction={canAddTeam ? () => setCreateMode('team') : undefined}
+          onOpenGoal={(id) => onNavigate(`/performance/goals/${id}`)}
+        />
       )}
 
       {activeTab === 'overall' && perms.canViewOverallGoals && (
         <SimpleGoalsPanel
           goals={companyCards}
-          searchPlaceholder="Search overall goals…"
-          emptyTitle="No overall goals"
+          searchPlaceholder="Search company goals…"
+          emptyTitle="No company goals"
           emptyHint={`No strategic objectives published for ${company.name} yet.`}
-          metaColumnLabel="Owner"
+          metaColumnLabel="Owner / Assignee"
           primaryActionLabel={canAddCompany ? 'Add Goal' : undefined}
           onPrimaryAction={canAddCompany ? () => setCreateMode('overall') : undefined}
           onOpenGoal={(id) => onNavigate(`/performance/goals/${id}`)}

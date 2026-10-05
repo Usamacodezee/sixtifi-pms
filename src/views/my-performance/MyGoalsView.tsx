@@ -1,23 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { MyGoalItem, calculateGoalStatus } from '../../data/mockMyGoals';
 import { GoalStatus } from '../../types/performance';
 import { ToastType } from '../../components/ui/Toast';
 import { UpdateProgressModal } from './UpdateProgressModal';
+import { MOCK_PERFORMANCE_CYCLES } from '../../data/mockCycles';
 import {
   Target,
   CheckCircle2,
   AlertTriangle,
-  AlertCircle,
   Search,
   X,
-  TrendingUp,
   Calendar,
   ArrowLeft,
-  ArrowRight,
-  Sparkles,
   Award,
-  Layers,
   Edit3
 } from 'lucide-react';
 import './MyGoalsStyles.css';
@@ -48,6 +44,7 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [cycleFilter, setCycleFilter] = useState<string>('all');
   const [modalGoal, setModalGoal] = useState<MyGoalItem | null>(null);
 
   // Compute summary stats dynamically from goals list
@@ -55,7 +52,17 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
   const onTrackCount = goals.filter((g) => g.status === 'On Track').length;
   const atRiskCount = goals.filter((g) => g.status === 'At Risk').length;
   const completedCount = goals.filter((g) => g.status === 'Completed').length;
-  const needsAttentionCount = goals.filter((g) => g.status === 'Needs Attention').length;
+
+  const cycleOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    MOCK_PERFORMANCE_CYCLES.forEach((c) => map.set(c.id, c.name));
+    goals.forEach((g) => {
+      if (g.cycleId && g.cycleName) {
+        map.set(g.cycleId, g.cycleName);
+      }
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }, [goals]);
 
   // Filtered goals
   const filteredGoals = goals.filter((goal) => {
@@ -63,19 +70,24 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
       goal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       goal.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       goal.target.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      goal.currentAchievement.toLowerCase().includes(searchTerm.toLowerCase());
+      goal.currentAchievement.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (goal.cycleName || '').toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === 'all' || goal.status.toLowerCase() === statusFilter.toLowerCase();
 
-    return matchesSearch && matchesStatus;
+    const matchesCycle =
+      cycleFilter === 'all' || goal.cycleId === cycleFilter || !goal.cycleId;
+
+    return matchesSearch && matchesStatus && matchesCycle;
   });
 
-  const isFiltered = searchTerm !== '' || statusFilter !== 'all';
+  const isFiltered = searchTerm !== '' || statusFilter !== 'all' || cycleFilter !== 'all';
 
   const clearFilters = () => {
     setSearchTerm('');
     setStatusFilter('all');
+    setCycleFilter('all');
   };
 
   const handleOpenUpdateModal = (goal: MyGoalItem) => {
@@ -118,7 +130,7 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
       {!embedded && (
         <PageHeader
           title="My Goals"
-          subtitle="Track your goals, update progress, and monitor your performance."
+          subtitle="Track your goals, update progress, and monitor your performance across review cycles."
           breadcrumbs={[
             { label: 'Platform', href: '#' },
             { label: 'Performance', href: '#' },
@@ -147,7 +159,7 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
           <div className="my-goals-banner-title-col">
             <div className="my-goals-banner-name">
               <span>FY 2026–27 Annual Performance Review</span>
-              <span className="pms-badge badge-success">Active</span>
+              <span className="pms-badge badge-success">Active Cycle</span>
             </div>
             <div className="my-goals-banner-meta">
               <span>Period: 01 Apr 2026 – 31 Mar 2027</span>
@@ -162,7 +174,7 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
         <div className="my-goals-banner-right">
           <div className="my-goals-stage-tag">
             <span>Current Stage:</span>
-            <strong style={{ color: 'var(--text-primary)' }}>Goal Execution & Self Review</strong>
+            <strong style={{ color: 'var(--text-primary)' }}>Goal Execution &amp; Self Review</strong>
           </div>
         </div>
       </div>
@@ -230,11 +242,26 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
             <input
               type="text"
               className="my-goals-search-input"
-              placeholder="Search goals..."
+              placeholder="Search goals or cycles..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+
+          {/* Performance Cycle Filter */}
+          <select
+            className="my-goals-filter-select"
+            value={cycleFilter}
+            onChange={(e) => setCycleFilter(e.target.value)}
+            style={{ minWidth: 200 }}
+          >
+            <option value="all">All Cycles</option>
+            {cycleOptions.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
 
           {/* Status Filter */}
           <select
@@ -304,7 +331,7 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
             <table className="my-goals-table">
               <thead>
                 <tr>
-                  <th>Goal</th>
+                  <th>Goal &amp; Cycle</th>
                   <th>Target</th>
                   <th>Progress</th>
                   <th>Weight</th>
@@ -316,7 +343,7 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
               <tbody>
                 {filteredGoals.map((goal) => (
                   <tr key={goal.id}>
-                    {/* Goal Title & Description */}
+                    {/* Goal Title & Description & Cycle Badge */}
                     <td>
                       <div className="goal-cell-title-box">
                         <span
@@ -329,6 +356,12 @@ export const MyGoalsView: React.FC<MyGoalsViewProps> = ({
                           {goal.title}
                         </span>
                         <span className="goal-cell-desc-sub">{goal.description}</span>
+                        <div style={{ marginTop: 4 }}>
+                          <span className="goals-cycle-tag">
+                            <Calendar size={11} />
+                            {goal.cycleName || 'FY 2026–27 Annual Performance Review'}
+                          </span>
+                        </div>
                       </div>
                     </td>
 

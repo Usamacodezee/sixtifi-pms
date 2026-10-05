@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Info, X, Layers, Gauge, Paperclip, UploadCloud, FileText } from 'lucide-react';
+import { Info, X, Layers, Gauge, Paperclip, UploadCloud, FileText, UserCheck, User, Calendar } from 'lucide-react';
 import { MOCK_KRAS, MOCK_KPIS, KraItem, KpiItem } from '../../data/mockPerformanceModules';
+import { MOCK_PERFORMANCE_CYCLES } from '../../data/mockCycles';
+import { PerformanceCycle } from '../../types/performance';
 
 export type CreateGoalMode = 'my' | 'team' | 'overall';
 
@@ -20,11 +22,14 @@ export interface CreateGoalFormValues {
   target: string;
   weight: number;
   dueDate: string;
-  /** Company goal owner, or locked self for Mine */
+  /** Company goal owner or assigned name */
   owner: string;
   ownerRole: string;
-  /** Team assignee employee id */
+  /** Goal assignee employee id */
   assigneeId: string;
+  /** Performance Cycle identification */
+  cycleId: string;
+  cycleName: string;
   kraId?: string;
   kraName?: string;
   kpiId?: string;
@@ -37,6 +42,7 @@ export interface CreateGoalModalProps {
   companyName: string;
   selfName: string;
   assignees: TeamAssigneeOption[];
+  cycles?: PerformanceCycle[];
   resultAreas?: KraItem[];
   metrics?: KpiItem[];
   onClose: () => void;
@@ -50,6 +56,7 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
   companyName,
   selfName,
   assignees,
+  cycles = MOCK_PERFORMANCE_CYCLES,
   resultAreas = MOCK_KRAS,
   metrics = MOCK_KPIS,
   onClose,
@@ -62,6 +69,9 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
   );
   const initialKpi = activeKpisForKra[0] || metrics[0];
 
+  const activeCycles = cycles.filter((c) => c.status !== 'Draft');
+  const initialCycle = activeCycles[0] || cycles[0];
+
   const [selectedKraId, setSelectedKraId] = useState<string>(initialKra?.id || '');
   const [selectedKpiId, setSelectedKpiId] = useState<string>(initialKpi?.id || '');
   const [attachmentName, setAttachmentName] = useState<string>('');
@@ -70,15 +80,33 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
   const kpisForSelectedKra = metrics.filter((m) => m.kraId === selectedKraId);
   const currentKpi = metrics.find((m) => m.id === selectedKpiId) || kpisForSelectedKra[0] || initialKpi;
 
+  // Find self assignee option if present, or first cycle assignee
+  const selfAssignee = assignees.find((a) => a.name.toLowerCase() === selfName.toLowerCase());
+  const defaultCycleAssignee = assignees[0];
+
+  const initialAssigneeId = mode === 'my'
+    ? (selfAssignee?.id || 'self-id')
+    : (defaultCycleAssignee?.id || '');
+
+  const initialOwnerName = mode === 'my'
+    ? selfName
+    : (defaultCycleAssignee?.name || selfName);
+
+  const initialOwnerRole = mode === 'my'
+    ? 'Employee'
+    : (defaultCycleAssignee?.designation || 'Team Member');
+
   const [form, setForm] = useState<CreateGoalFormValues>({
     title: currentKpi ? `${currentKpi.name}` : '',
     description: currentKra?.description || '',
     target: currentKpi ? `100 ${currentKpi.unit}` : '',
     weight: currentKra?.weightHint || 20,
     dueDate: DEFAULT_DUE,
-    owner: mode === 'overall' ? '' : selfName,
-    ownerRole: mode === 'overall' ? 'Leadership' : 'Employee',
-    assigneeId: assignees[0]?.id || '',
+    owner: initialOwnerName,
+    ownerRole: initialOwnerRole,
+    assigneeId: initialAssigneeId,
+    cycleId: initialCycle?.id || 'cycle-1',
+    cycleName: initialCycle?.name || 'FY 2026–27 Annual Performance Review',
     kraId: currentKra?.id || '',
     kraName: currentKra?.name || '',
     kpiId: currentKpi?.id || '',
@@ -86,7 +114,7 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
     attachmentName: ''
   });
 
-  // Handle Kra Change
+  // Handle KRA Change
   const handleKraChange = (kraId: string) => {
     setSelectedKraId(kraId);
     const kra = resultAreas.find((k) => k.id === kraId);
@@ -109,7 +137,7 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
     }));
   };
 
-  // Handle Kpi Change
+  // Handle KPI Change
   const handleKpiChange = (kpiId: string) => {
     setSelectedKpiId(kpiId);
     const kpi = metrics.find((m) => m.id === kpiId);
@@ -123,26 +151,46 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
   };
 
   const titleByMode =
-    mode === 'my' ? 'Add my goal' : mode === 'team' ? 'Add team goal' : 'Add company goal';
+    mode === 'my' ? 'Add My Goal' : mode === 'team' ? 'Add Team Goal' : 'Add Company Goal';
 
   const subtitleByMode =
     mode === 'my'
-      ? `Assigned only to you (${selfName}) at ${companyName}.`
+      ? `Assigned only to yourself (${selfName}) for ${companyName}.`
       : mode === 'team'
-        ? `Assign this goal to a team member at ${companyName}.`
-        : `Company-wide objective for ${companyName}.`;
+        ? `Assign a team goal to an employee within the performance cycle scope at ${companyName}.`
+        : `Assign a company goal to an owner / lead within the performance cycle scope at ${companyName}.`;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim() || !form.target.trim()) return;
-    if (mode === 'overall' && !form.owner.trim()) return;
-    if (mode === 'team' && !form.assigneeId) return;
+
+    if (mode === 'my') {
+      onSubmit({
+        ...form,
+        title: form.title.trim(),
+        description: form.description.trim(),
+        target: form.target.trim(),
+        owner: selfName,
+        ownerRole: 'Employee',
+        assigneeId: selfAssignee?.id || 'self-id',
+        weight: Math.min(100, Math.max(1, Number(form.weight) || 10)),
+        attachmentName: attachmentName || undefined
+      });
+      return;
+    }
+
+    // Team or Company (Overall) Goal: Assignee selected from cycle scope
+    if (!form.assigneeId) return;
+    const selectedAssignee = assignees.find((a) => a.id === form.assigneeId) || defaultCycleAssignee;
+
     onSubmit({
       ...form,
       title: form.title.trim(),
       description: form.description.trim(),
       target: form.target.trim(),
-      owner: form.owner.trim() || selfName,
+      owner: selectedAssignee ? selectedAssignee.name : form.owner || selfName,
+      ownerRole: selectedAssignee ? selectedAssignee.designation : form.ownerRole || 'Leadership',
+      assigneeId: selectedAssignee ? selectedAssignee.id : form.assigneeId,
       weight: Math.min(100, Math.max(1, Number(form.weight) || 10)),
       attachmentName: attachmentName || undefined
     });
@@ -156,7 +204,7 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="create-goal-title"
-        style={{ maxWidth: '580px' }}
+        style={{ maxWidth: '600px' }}
       >
         <div className="goals-create-modal-head">
           <div>
@@ -170,6 +218,37 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
 
         <form onSubmit={handleSubmit}>
           <div className="goals-form-grid">
+            {/* 0. Select Performance Cycle */}
+            <div className="goals-form-field full">
+              <label htmlFor="cg-cycle" style={{ display: 'flex', alignItems: 'center', gap: 5, fontWeight: 600 }}>
+                <Calendar size={14} color="#6366F1" />
+                <span>Performance Cycle *</span>
+              </label>
+              <select
+                id="cg-cycle"
+                value={form.cycleId}
+                onChange={(e) => {
+                  const selId = e.target.value;
+                  const cyc = cycles.find((c) => c.id === selId);
+                  setForm((prev) => ({
+                    ...prev,
+                    cycleId: selId,
+                    cycleName: cyc ? cyc.name : prev.cycleName
+                  }));
+                }}
+                required
+              >
+                {cycles.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({c.status}) · {c.duration}
+                  </option>
+                ))}
+              </select>
+              <span className="goals-field-hint" style={{ marginTop: 2, fontSize: '0.73rem', color: '#64748B' }}>
+                Cycle identification attaches this goal to an active performance evaluation window.
+              </span>
+            </div>
+
             {/* 1. Select Result Area (KRA) */}
             <div className="goals-form-field full">
               <label htmlFor="cg-kra" style={{ display: 'flex', alignItems: 'center', gap: 5, fontWeight: 600 }}>
@@ -214,24 +293,7 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
               </select>
             </div>
 
-            {/* Context Strip showing configuration */}
-            {currentKra && currentKpi && (
-              <div
-                className="goals-form-field full"
-                style={{
-                  background: '#F8FAFC',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 6,
-                  padding: '8px 12px',
-                  fontSize: '0.75rem',
-                  color: 'var(--text-secondary)'
-                }}
-              >
-                <strong>Aligned Standard:</strong> {currentKra.name} &rarr; <strong>{currentKpi.name}</strong> ({currentKpi.unit}, {currentKpi.frequency}, {currentKpi.direction})
-              </div>
-            )}
-
-            {/* Title */}
+            {/* Goal Title */}
             <div className="goals-form-field full">
               <label htmlFor="cg-title">Goal Title *</label>
               <input
@@ -254,21 +316,51 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
               />
             </div>
 
-            {mode === 'my' && (
+            {/* Assignee Field Rules:
+                - mode === 'my': Lock assignee to myself only.
+                - mode === 'team' | 'overall': Assignee selected from cycle scope assignees.
+            */}
+            {mode === 'my' ? (
               <div className="goals-form-field full">
-                <label>Assigned to</label>
-                <input value={selfName} disabled readOnly />
-                <span className="goals-field-hint">Mine goals are assigned to you only.</span>
+                <label htmlFor="cg-assignee-self" style={{ display: 'flex', alignItems: 'center', gap: 5, fontWeight: 600 }}>
+                  <User size={14} color="#2563EB" />
+                  <span>Assignee *</span>
+                </label>
+                <input
+                  id="cg-assignee-self"
+                  value={`${selfName} (Myself)`}
+                  disabled
+                  readOnly
+                  style={{
+                    backgroundColor: 'var(--bg-secondary, #F8FAFC)',
+                    color: 'var(--text-primary, #0F172A)',
+                    cursor: 'not-allowed',
+                    fontWeight: 600
+                  }}
+                />
+                <span className="goals-field-hint" style={{ marginTop: 4, display: 'block', fontSize: '0.75rem', color: '#64748B' }}>
+                  Goals created from &quot;My Goals&quot; are automatically assigned to yourself only.
+                </span>
               </div>
-            )}
-
-            {mode === 'team' && (
+            ) : (
               <div className="goals-form-field full">
-                <label htmlFor="cg-assignee">Assign to *</label>
+                <label htmlFor="cg-assignee" style={{ display: 'flex', alignItems: 'center', gap: 5, fontWeight: 600 }}>
+                  <UserCheck size={14} color="#059669" />
+                  <span>{mode === 'overall' ? 'Goal Owner / Assignee (Cycle Scope) *' : 'Goal Assignee (Cycle Scope) *'}</span>
+                </label>
                 <select
                   id="cg-assignee"
                   value={form.assigneeId}
-                  onChange={(e) => setForm({ ...form, assigneeId: e.target.value })}
+                  onChange={(e) => {
+                    const selId = e.target.value;
+                    const found = assignees.find((a) => a.id === selId);
+                    setForm((prev) => ({
+                      ...prev,
+                      assigneeId: selId,
+                      owner: found ? found.name : prev.owner,
+                      ownerRole: found ? found.designation : prev.ownerRole
+                    }));
+                  }}
                   required
                 >
                   {assignees.map((a) => (
@@ -277,32 +369,15 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
                     </option>
                   ))}
                 </select>
+                <span className="goals-field-hint" style={{ marginTop: 4, display: 'block', fontSize: '0.75rem', color: '#64748B' }}>
+                  {mode === 'overall'
+                    ? 'Select any lead, executive, or employee within the scope of this cycle.'
+                    : 'Select any team member or employee within the scope of this cycle.'}
+                </span>
               </div>
             )}
 
-            {mode === 'overall' && (
-              <>
-                <div className="goals-form-field">
-                  <label htmlFor="cg-owner">Owner *</label>
-                  <input
-                    id="cg-owner"
-                    value={form.owner}
-                    onChange={(e) => setForm({ ...form, owner: e.target.value })}
-                    placeholder="Executive owner"
-                    required
-                  />
-                </div>
-                <div className="goals-form-field">
-                  <label htmlFor="cg-owner-role">Owner role</label>
-                  <input
-                    id="cg-owner-role"
-                    value={form.ownerRole}
-                    onChange={(e) => setForm({ ...form, ownerRole: e.target.value })}
-                  />
-                </div>
-              </>
-            )}
-
+            {/* Target Value */}
             <div className="goals-form-field">
               <label htmlFor="cg-target">Target Metric Value *</label>
               <input
@@ -314,6 +389,7 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
               />
             </div>
 
+            {/* Due Date */}
             <div className="goals-form-field">
               <label htmlFor="cg-due">Target Due Date</label>
               <input
@@ -323,6 +399,7 @@ export const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
               />
             </div>
 
+            {/* Weight */}
             <div className="goals-form-field full">
               <label htmlFor="cg-weight">Appraisal Weight (%)</label>
               <input

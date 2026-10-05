@@ -1260,25 +1260,6 @@ export const CreateCycleWizardView: React.FC<CreateCycleWizardViewProps> = ({
                     </span>
                   </div>
                   <div className="summary-kv-item">
-                    <span className="summary-k-label">Initial Status</span>
-                    <span className="pms-badge badge-warning">Draft</span>
-                  </div>
-                  {formData.description && (
-                    <div className="summary-kv-item" style={{ gridColumn: '1 / -1' }}>
-                      <span className="summary-k-label">Description</span>
-                      <span className="summary-v-val" style={{ fontWeight: 'normal' }}>
-                        {formData.description}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Block 2: Applicable Employees */}
-              <div className="summary-block-card">
-                <span className="summary-block-title">Applicable Employees</span>
-                <div className="summary-kv-grid">
-                  <div className="summary-kv-item">
                     <span className="summary-k-label">Selection Scope</span>
                     <span className="summary-v-val">
                       {formData.selectionMode === 'all'
@@ -1290,12 +1271,14 @@ export const CreateCycleWizardView: React.FC<CreateCycleWizardViewProps> = ({
                         : `Specific Employees (${formData.selectedEmployeeIds.length} chosen)`}
                     </span>
                   </div>
-                  <div className="summary-kv-item">
-                    <span className="summary-k-label">Total Included Staff</span>
-                    <span className="summary-v-val" style={{ color: '#0284C7', fontSize: 'var(--text-sm)' }}>
-                      {getSelectedEmployeesCount()} employees
-                    </span>
-                  </div>
+                  {formData.description && (
+                    <div className="summary-kv-item" style={{ gridColumn: '1 / -1' }}>
+                      <span className="summary-k-label">Description</span>
+                      <span className="summary-v-val" style={{ fontWeight: 'normal' }}>
+                        {formData.description}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 

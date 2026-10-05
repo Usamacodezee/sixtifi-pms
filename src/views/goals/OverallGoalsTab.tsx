@@ -2,21 +2,23 @@ import React, { useMemo, useState } from 'react';
 import {
   OverallGoal,
   summarizeGoalStats,
-  calculateGoalStatus
+  calculateGoalStatus,
+  getAssignableEmployees
 } from '../../data/mockGoalsModule';
 import { Company } from '../../data/mockCompanies';
 import { GoalStatus, UserRole } from '../../types/performance';
 import { ToastType } from '../../components/ui/Toast';
+import { CreateGoalModal, CreateGoalFormValues } from './CreateGoalModal';
 import {
-  Target,
+  Building2,
+  TrendingUp,
   CheckCircle2,
   AlertTriangle,
-  TrendingUp,
   Search,
   X,
   Plus,
-  Building2,
-  Link2
+  Link2,
+  Target
 } from 'lucide-react';
 
 export interface OverallGoalsTabProps {
@@ -56,21 +58,13 @@ export const OverallGoalsTab: React.FC<OverallGoalsTabProps> = ({
   onCreateGoal,
   onShowToast
 }) => {
-  const canManage = currentUserRole === 'HR/Admin';
+  const canManage = currentUserRole === 'HR/Admin' || currentUserRole === 'Manager';
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showCreate, setShowCreate] = useState(false);
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    owner: '',
-    ownerRole: 'Leadership',
-    target: '',
-    weight: 10,
-    dueDate: '31 Mar 2027'
-  });
 
   const stats = useMemo(() => summarizeGoalStats(goals), [goals]);
+  const cycleAssignees = useMemo(() => getAssignableEmployees(company.id), [company.id]);
 
   const filtered = goals.filter((g) => {
     const q = searchTerm.toLowerCase();
@@ -89,43 +83,35 @@ export const OverallGoalsTab: React.FC<OverallGoalsTabProps> = ({
     setStatusFilter('all');
   };
 
-  const handleCreate = () => {
-    if (!form.title.trim() || !form.target.trim() || !form.owner.trim()) {
-      onShowToast?.('error', 'Missing fields', 'Title, owner, and target are required.');
-      return;
-    }
+  const handleCreateSubmit = (values: CreateGoalFormValues) => {
+    const chosenPerson = cycleAssignees.find((a) => a.id === values.assigneeId);
+    const ownerName = chosenPerson ? chosenPerson.name : (values.owner || 'Rahul Shah');
+    const ownerRole = chosenPerson ? chosenPerson.designation : (values.ownerRole || 'Leadership');
+
     const goal: OverallGoal = {
       id: `og-${Date.now()}`,
       companyId: company.id,
-      title: form.title.trim(),
-      description: form.description.trim() || 'Company strategic objective.',
-      owner: form.owner.trim(),
-      ownerRole: form.ownerRole.trim() || 'Leadership',
-      target: form.target.trim(),
+      title: values.title.trim(),
+      description: values.description.trim() || 'Company strategic objective.',
+      owner: ownerName,
+      ownerRole: ownerRole,
+      target: values.target.trim(),
       currentAchievement: '0',
       progress: 0,
-      weight: Math.min(100, Math.max(1, Number(form.weight) || 10)),
+      weight: Math.min(100, Math.max(1, Number(values.weight) || 10)),
       startDate: '01 Apr 2026',
-      dueDate: form.dueDate,
+      dueDate: values.dueDate || '31 Mar 2027',
       status: calculateGoalStatus(0),
       linkedTeamGoalIds: [],
       history: []
     };
+
     onCreateGoal(goal);
     setShowCreate(false);
-    setForm({
-      title: '',
-      description: '',
-      owner: '',
-      ownerRole: 'Leadership',
-      target: '',
-      weight: 10,
-      dueDate: '31 Mar 2027'
-    });
     onShowToast?.(
       'success',
       'Company goal created',
-      `"${goal.title}" added for ${company.name}.`
+      `"${goal.title}" assigned to ${ownerName} for ${company.name}.`
     );
   };
 
@@ -135,8 +121,7 @@ export const OverallGoalsTab: React.FC<OverallGoalsTabProps> = ({
         <div>
           <h3 className="goals-section-title">Overall / Company Goals</h3>
           <p className="goals-section-sub">
-            Strategic objectives for <strong>{company.name}</strong>. Team and individual goals
-            align upward to these.
+            Strategic objectives for <strong>{company.name}</strong>. Assignable to leads and team members within cycle scope.
           </p>
         </div>
         {canManage && (
@@ -254,7 +239,7 @@ export const OverallGoalsTab: React.FC<OverallGoalsTabProps> = ({
               <thead>
                 <tr>
                   <th>Company Goal</th>
-                  <th>Owner</th>
+                  <th>Owner / Assignee</th>
                   <th>Target</th>
                   <th>Progress</th>
                   <th>Weight</th>
@@ -295,7 +280,7 @@ export const OverallGoalsTab: React.FC<OverallGoalsTabProps> = ({
                     <td>
                       <span className="goals-align-chip">
                         <Link2 size={11} />
-                        {goal.linkedTeamGoalIds.length} teams
+                        {goal.linkedTeamGoalIds ? goal.linkedTeamGoalIds.length : 0} teams
                       </span>
                     </td>
                     <td>{statusBadge(goal.status)}</td>
@@ -308,97 +293,14 @@ export const OverallGoalsTab: React.FC<OverallGoalsTabProps> = ({
       </div>
 
       {showCreate && (
-        <div className="goals-create-modal-backdrop" onClick={() => setShowCreate(false)}>
-          <div
-            className="goals-create-modal"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-          >
-            <div>
-              <h3>Add Company Goal</h3>
-              <p>
-                Creates an overall goal for <strong>{company.name}</strong> only.
-              </p>
-            </div>
-            <div className="goals-form-grid">
-              <div className="goals-form-field full">
-                <label>Title</label>
-                <input
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  placeholder="e.g. Grow ARR to ₹50 Cr"
-                />
-              </div>
-              <div className="goals-form-field full">
-                <label>Description</label>
-                <textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Strategic context and success criteria"
-                />
-              </div>
-              <div className="goals-form-field">
-                <label>Owner</label>
-                <input
-                  value={form.owner}
-                  onChange={(e) => setForm({ ...form, owner: e.target.value })}
-                  placeholder="Executive owner"
-                />
-              </div>
-              <div className="goals-form-field">
-                <label>Owner Role</label>
-                <input
-                  value={form.ownerRole}
-                  onChange={(e) => setForm({ ...form, ownerRole: e.target.value })}
-                />
-              </div>
-              <div className="goals-form-field">
-                <label>Target</label>
-                <input
-                  value={form.target}
-                  onChange={(e) => setForm({ ...form, target: e.target.value })}
-                  placeholder="Measurable target"
-                />
-              </div>
-              <div className="goals-form-field">
-                <label>Weight (%)</label>
-                <input
-                  type="number"
-                  min={1}
-                  max={100}
-                  value={form.weight}
-                  onChange={(e) => setForm({ ...form, weight: Number(e.target.value) })}
-                />
-              </div>
-              <div className="goals-form-field full">
-                <label>Due Date</label>
-                <input
-                  value={form.dueDate}
-                  onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-                />
-              </div>
-            </div>
-            <div className="goals-modal-actions">
-              <button
-                type="button"
-                className="pms-btn pms-btn-secondary"
-                style={{ padding: '8px 14px' }}
-                onClick={() => setShowCreate(false)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="pms-btn pms-btn-primary"
-                style={{ padding: '8px 14px' }}
-                onClick={handleCreate}
-              >
-                Create Goal
-              </button>
-            </div>
-          </div>
-        </div>
+        <CreateGoalModal
+          mode="overall"
+          companyName={company.name}
+          selfName="Rahul Shah"
+          assignees={cycleAssignees}
+          onClose={() => setShowCreate(false)}
+          onSubmit={handleCreateSubmit}
+        />
       )}
     </div>
   );

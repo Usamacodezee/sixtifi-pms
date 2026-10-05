@@ -8,6 +8,8 @@ export type GoalLevel = 'individual' | 'team' | 'overall';
 export interface OverallGoal {
   id: string;
   companyId: string;
+  cycleId?: string;
+  cycleName?: string;
   title: string;
   description: string;
   owner: string;
@@ -26,6 +28,8 @@ export interface OverallGoal {
 export interface TeamGoal {
   id: string;
   companyId: string;
+  cycleId?: string;
+  cycleName?: string;
   title: string;
   description: string;
   teamName: string;
@@ -48,6 +52,8 @@ export interface TeamGoal {
 export interface TeamMemberGoalRow {
   id: string;
   companyId: string;
+  cycleId?: string;
+  cycleName?: string;
   employeeId: string;
   employeeName: string;
   employeeCode: string;
@@ -66,6 +72,8 @@ export const MOCK_OVERALL_GOALS: OverallGoal[] = [
   {
     id: 'og-1',
     companyId: 'co-sixtifi',
+    cycleId: 'cycle-1',
+    cycleName: 'FY 2026–27 Annual Performance Review',
     title: 'Grow ARR to ₹48 Cr',
     description: 'Expand enterprise ARR across India and Middle East through new logos and expansion revenue.',
     owner: 'Ananya Mehta',
@@ -416,19 +424,82 @@ export const getAssignableEmployees = (companyId: string): AssignableEmployee[] 
         department: 'Retail Ops',
         initials: 'RM',
         avatarBg: '#E0F2FE'
+      },
+      {
+        id: 'ns-emp-3',
+        name: 'Dev Malhotra',
+        employeeCode: 'NSR-1001',
+        designation: 'Zonal Head',
+        department: 'Retail Ops',
+        initials: 'DM',
+        avatarBg: '#F5F3FF'
       }
     ];
   }
 
-  return TEAM_MEMBERS.map((m) => ({
-    id: m.id,
-    name: m.name,
-    employeeCode: m.employeeCode,
-    designation: m.designation,
-    department: m.department,
-    initials: m.initials,
-    avatarBg: m.avatarBg
-  }));
+  const baseEmployees: AssignableEmployee[] = [
+    {
+      id: 'emp-self',
+      name: 'Rahul Shah',
+      employeeCode: 'EMP-1001',
+      designation: 'Sales Executive',
+      department: 'Sales',
+      initials: 'RS',
+      avatarBg: '#E0F2FE'
+    },
+    {
+      id: 'emp-exec-1',
+      name: 'Ananya Mehta',
+      employeeCode: 'EXEC-001',
+      designation: 'CEO',
+      department: 'Executive',
+      initials: 'AM',
+      avatarBg: '#FEF3C7'
+    },
+    {
+      id: 'emp-exec-2',
+      name: 'Vikram Patel',
+      employeeCode: 'EXEC-002',
+      designation: 'VP of Sales',
+      department: 'Sales',
+      initials: 'VP',
+      avatarBg: '#E0F2FE'
+    },
+    {
+      id: 'emp-exec-3',
+      name: 'Sneha Iyer',
+      employeeCode: 'EXEC-003',
+      designation: 'VP of Product',
+      department: 'Engineering',
+      initials: 'SI',
+      avatarBg: '#ECFDF5'
+    },
+    {
+      id: 'emp-exec-4',
+      name: 'Karan Desai',
+      employeeCode: 'EXEC-004',
+      designation: 'CHRO',
+      department: 'HR',
+      initials: 'KD',
+      avatarBg: '#F5F3FF'
+    },
+    ...TEAM_MEMBERS.map((m) => ({
+      id: m.id,
+      name: m.name,
+      employeeCode: m.employeeCode,
+      designation: m.designation,
+      department: m.department,
+      initials: m.initials,
+      avatarBg: m.avatarBg
+    }))
+  ];
+
+  const seen = new Set<string>();
+  return baseEmployees.filter((e) => {
+    if (seen.has(e.id)) return false;
+    seen.add(e.id);
+    return true;
+  });
 };
 
 export const buildTeamMemberGoalRows = (companyId: string): TeamMemberGoalRow[] => {

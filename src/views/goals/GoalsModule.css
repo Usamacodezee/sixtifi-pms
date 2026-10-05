@@ -488,3 +488,17 @@
   justify-content: flex-end;
   gap: var(--space-2);
 }
+
+.goals-cycle-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #4338CA;
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}

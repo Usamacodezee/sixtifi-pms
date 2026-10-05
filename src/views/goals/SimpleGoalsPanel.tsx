@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { GoalStatus } from '../../types/performance';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, Calendar } from 'lucide-react';
+import { MOCK_PERFORMANCE_CYCLES } from '../../data/mockCycles';
 
 export interface SimpleGoalCard {
   id: string;
@@ -13,6 +14,8 @@ export interface SimpleGoalCard {
   status: GoalStatus;
   dueDate?: string;
   weight?: number;
+  cycleId?: string;
+  cycleName?: string;
 }
 
 export interface SimpleGoalsPanelProps {
@@ -66,8 +69,21 @@ export const SimpleGoalsPanel: React.FC<SimpleGoalsPanelProps> = ({
 }) => {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
+  const [cycleFilter, setCycleFilter] = useState('all');
 
   const showMeta = goals.some((g) => !!g.meta);
+
+  // Extract unique cycles from goals or mock cycles list
+  const cycleOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    MOCK_PERFORMANCE_CYCLES.forEach((c) => map.set(c.id, c.name));
+    goals.forEach((g) => {
+      if (g.cycleId && g.cycleName) {
+        map.set(g.cycleId, g.cycleName);
+      }
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }, [goals]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -76,19 +92,21 @@ export const SimpleGoalsPanel: React.FC<SimpleGoalsPanelProps> = ({
         !q ||
         g.title.toLowerCase().includes(q) ||
         (g.description || '').toLowerCase().includes(q) ||
-        (g.meta || '').toLowerCase().includes(q);
-      const matchS = status === 'all' || g.status === status;
-      return matchQ && matchS;
-    });
-  }, [goals, search, status]);
+        (g.meta || '').toLowerCase().includes(q) ||
+        (g.cycleName || '').toLowerCase().includes(q);
 
-  const onTrack = goals.filter((g) => g.status === 'On Track').length;
-  const atRisk = goals.filter((g) => g.status === 'At Risk' || g.status === 'Needs Attention').length;
+      const matchS = status === 'all' || g.status === status;
+      const matchC = cycleFilter === 'all' || g.cycleId === cycleFilter || !g.cycleId;
+
+      return matchQ && matchS && matchC;
+    });
+  }, [goals, search, status, cycleFilter]);
 
   return (
     <div className="sg-panel">
       <div className="sg-toolbar">
         <div className="sg-toolbar-left">
+          {/* Search */}
           <div className="sg-search">
             <Search size={14} />
             <input
@@ -97,6 +115,24 @@ export const SimpleGoalsPanel: React.FC<SimpleGoalsPanelProps> = ({
               placeholder={searchPlaceholder}
             />
           </div>
+
+          {/* Performance Cycle Filter Dropdown */}
+          <select
+            className="goals-company-select compact"
+            value={cycleFilter}
+            onChange={(e) => setCycleFilter(e.target.value)}
+            style={{ minWidth: 210 }}
+            aria-label="Filter by Performance Cycle"
+          >
+            <option value="all">All Cycles</option>
+            {cycleOptions.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+
+          {/* Status Chips */}
           <div className="sg-chips" role="tablist" aria-label="Filter by status">
             {STATUS_CHIPS.map((chip) => (
               <button
@@ -112,22 +148,8 @@ export const SimpleGoalsPanel: React.FC<SimpleGoalsPanelProps> = ({
             ))}
           </div>
         </div>
+
         <div className="sg-toolbar-right">
-          <span className="sg-summary">
-            {filtered.length} of {goals.length}
-            {goals.length > 0 && (
-              <>
-                {' '}
-                · <span className="is-ok">{onTrack} on track</span>
-                {atRisk > 0 && (
-                  <>
-                    {' '}
-                    · <span className="is-warn">{atRisk} need attention</span>
-                  </>
-                )}
-              </>
-            )}
-          </span>
           {primaryActionLabel && onPrimaryAction && (
             <button
               type="button"
@@ -164,7 +186,7 @@ export const SimpleGoalsPanel: React.FC<SimpleGoalsPanelProps> = ({
             <table className="goals-table">
               <thead>
                 <tr>
-                  <th>Goal</th>
+                  <th>Goal &amp; Cycle</th>
                   {showMeta && <th>{metaColumnLabel || 'Owner'}</th>}
                   <th>Target</th>
                   <th>Progress</th>
@@ -190,6 +212,12 @@ export const SimpleGoalsPanel: React.FC<SimpleGoalsPanelProps> = ({
                         {goal.description && (
                           <span className="goals-title-sub">{goal.description}</span>
                         )}
+                        <div style={{ marginTop: 4 }}>
+                          <span className="goals-cycle-tag">
+                            <Calendar size={11} />
+                            {goal.cycleName || 'FY 2026–27 Annual Performance Review'}
+                          </span>
+                        </div>
                       </div>
                     </td>
                     {showMeta && (

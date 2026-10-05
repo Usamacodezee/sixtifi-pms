@@ -4,6 +4,9 @@ export interface MyGoalItem {
   id: string;
   /** Owning company — Goals module is always company-scoped. */
   companyId?: string;
+  /** Performance cycle ID & Name for cycle identification. */
+  cycleId?: string;
+  cycleName?: string;
   title: string;
   description: string;
   target: string;
@@ -30,6 +33,9 @@ export const calculateGoalStatus = (progress: number): GoalStatus => {
 export const MOCK_MY_GOALS: MyGoalItem[] = [
   {
     id: 'my-goal-1',
+    companyId: 'co-sixtifi',
+    cycleId: 'cycle-1',
+    cycleName: 'FY 2026–27 Annual Performance Review',
     title: 'Increase Sales Revenue',
     description: 'Accelerate quarterly recurring revenue across corporate accounts in Western region through upselling and expansion.',
     target: '₹1 Crore',
@@ -62,6 +68,9 @@ export const MOCK_MY_GOALS: MyGoalItem[] = [
   },
   {
     id: 'my-goal-2',
+    companyId: 'co-sixtifi',
+    cycleId: 'cycle-1',
+    cycleName: 'FY 2026–27 Annual Performance Review',
     title: 'Improve Client Retention',
     description: 'Maintain renewal rates above 90% through proactive customer success checkpoints and quarterly business reviews.',
     target: '90%',
@@ -87,6 +96,9 @@ export const MOCK_MY_GOALS: MyGoalItem[] = [
   },
   {
     id: 'my-goal-3',
+    companyId: 'co-sixtifi',
+    cycleId: 'cycle-sales-eng',
+    cycleName: 'Q3 Sales & Engineering Target Review',
     title: 'New Customer Acquisition',
     description: 'Partner with inbound marketing and partner channels to acquire 20 new enterprise tier-1 customers.',
     target: '20',
@@ -112,6 +124,9 @@ export const MOCK_MY_GOALS: MyGoalItem[] = [
   },
   {
     id: 'my-goal-4',
+    companyId: 'co-sixtifi',
+    cycleId: 'cycle-1',
+    cycleName: 'FY 2026–27 Annual Performance Review',
     title: 'Product Knowledge Improvement',
     description: 'Complete advanced certification in platform architecture, cloud workflows, and technical demo presentation.',
     target: '100%',
@@ -137,6 +152,9 @@ export const MOCK_MY_GOALS: MyGoalItem[] = [
   },
   {
     id: 'my-goal-5',
+    companyId: 'co-sixtifi',
+    cycleId: 'cycle-2',
+    cycleName: 'H1 2026 Performance Review',
     title: 'Key Account Satisfaction & NPS',
     description: 'Elevate Net Promoter Score across dedicated strategic portfolio clients above 75 points.',
     target: '75 NPS',
@@ -162,6 +180,9 @@ export const MOCK_MY_GOALS: MyGoalItem[] = [
   },
   {
     id: 'my-goal-6',
+    companyId: 'co-sixtifi',
+    cycleId: 'cycle-1',
+    cycleName: 'FY 2026–27 Annual Performance Review',
     title: 'Cross-functional Collaboration & Enablement',
     description: 'Deliver 12 internal enablement sessions and mentor junior account executives on enterprise deals.',
     target: '12 Sessions',
