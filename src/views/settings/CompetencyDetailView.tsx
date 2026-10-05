@@ -26,9 +26,7 @@ export interface CompetencyDetailViewProps {
 
 const APPLICABLE_TO_OPTIONS: TargetingScope[] = [
   'All Employees',
-  'Specific Department',
-  'Specific Designation',
-  'Specific Grade'
+  'Specific Department'
 ];
 
 export const CompetencyDetailView: React.FC<CompetencyDetailViewProps> = ({
@@ -209,41 +207,6 @@ export const CompetencyDetailView: React.FC<CompetencyDetailViewProps> = ({
             </div>
           ))}
         </div>
-
-        {/* Department Applicability */}
-        <div className="form-section-header">
-          <h2 className="form-section-title">Competency Targeting</h2>
-          <p className="form-section-subtitle">
-            Select which department(s) this competency applies to, or choose All Departments to apply company-wide.
-          </p>
-        </div>
-
-        <div className="form-field-group">
-          <span className="form-field-label">
-            Applicable Department(s) <span className="required-asterisk">*</span>
-          </span>
-          <MultiSelectField
-            options={[
-              { value: 'All', label: 'All Departments (Company-Wide)', sub: 'Applies universally to all company departments' },
-              ...MOCK_DEPARTMENTS.map((d) => ({ value: d.name, label: d.name, sub: `${d.count} active employees` }))
-            ]}
-            selected={selectedDepts}
-            onChange={(next) => {
-              if (next.length === 0) {
-                setSelectedDepts(['All']);
-              } else if (next.includes('All') && next.length > 1) {
-                if (next[next.length - 1] === 'All') {
-                  setSelectedDepts(['All']);
-                } else {
-                  setSelectedDepts(next.filter((d) => d !== 'All'));
-                }
-              } else {
-                setSelectedDepts(next);
-              }
-            }}
-          />
-        </div>
-
 
         <div className="settings-section-footer">
           <button

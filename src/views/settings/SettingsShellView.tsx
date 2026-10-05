@@ -24,7 +24,8 @@ import {
   ChevronDown,
   ChevronRight,
   Gauge,
-  ListTree
+  ListTree,
+  Building2
 } from 'lucide-react';
 import '../cycles/CreateCycleWizard.css';
 import '../cycles/CycleEmployeesTab.css';
@@ -93,20 +94,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Competency',
     icon: Award,
     defaultChild: 'competencies',
-    children: [
-      {
-        id: 'competencies',
-        label: 'Competency Templates',
-        icon: ListTree,
-        route: SETTINGS_TAB_ROUTES.competencies
-      },
-      {
-        id: 'competency-mapping',
-        label: 'Competency Mapping',
-        icon: Layers,
-        route: SETTINGS_TAB_ROUTES['competency-mapping']
-      }
-    ]
+    children: []
   },
   {
     id: 'questions',
@@ -149,6 +137,8 @@ export interface SettingsShellViewProps {
 }
 
 const groupContainsTab = (group: NavGroup, tab: SettingsTab) =>
+  group.defaultChild === tab ||
+  (tab === 'competency-mapping' && group.id === 'competency') ||
   group.children.some((c) => c.id === tab);
 
 export const SettingsShellView: React.FC<SettingsShellViewProps> = ({
@@ -197,7 +187,7 @@ export const SettingsShellView: React.FC<SettingsShellViewProps> = ({
       />
 
       <div className="targeting-chain">
-        {['Company', 'Department', 'Designation', 'Grade', 'Review Type', 'Questions / Competencies'].map(
+        {['Company', 'Department', 'Review Type', 'Questions / Competencies'].map(
           (step, idx, arr) => (
             <React.Fragment key={step}>
               <span className="targeting-chain-item">{step}</span>
@@ -229,6 +219,7 @@ export const SettingsShellView: React.FC<SettingsShellViewProps> = ({
             const GroupIcon = group.icon;
             const isOpen = openGroups[group.id] !== false;
             const groupActive = groupContainsTab(group, activeTab);
+            const hasChildren = group.children && group.children.length > 0;
 
             return (
               <div key={group.id} className="settings-nav-group">
@@ -236,28 +227,32 @@ export const SettingsShellView: React.FC<SettingsShellViewProps> = ({
                   type="button"
                   className={`settings-nav-parent ${groupActive ? 'is-group-active' : ''}`}
                   onClick={() => {
-                    if (!isOpen) {
-                      setOpenGroups((prev) => ({ ...prev, [group.id]: true }));
-                    } else if (!groupActive) {
-                      toggleGroup(group.id);
+                    if (hasChildren) {
+                      if (!isOpen) {
+                        setOpenGroups((prev) => ({ ...prev, [group.id]: true }));
+                      } else if (!groupActive) {
+                        toggleGroup(group.id);
+                      }
                     }
                     onNavigate(SETTINGS_TAB_ROUTES[group.defaultChild]);
                   }}
                 >
                   <GroupIcon size={15} />
                   <span>{group.label}</span>
-                  <span
-                    className="settings-nav-chevron"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleGroup(group.id);
-                    }}
-                  >
-                    {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                  </span>
+                  {hasChildren && (
+                    <span
+                      className="settings-nav-chevron"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleGroup(group.id);
+                      }}
+                    >
+                      {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                    </span>
+                  )}
                 </button>
 
-                {isOpen && (
+                {hasChildren && isOpen && (
                   <div className="settings-nav-children">
                     {group.children.map((child) => {
                       const ChildIcon = child.icon;
@@ -310,19 +305,23 @@ export const SettingsShellView: React.FC<SettingsShellViewProps> = ({
             <CompetenciesTab
               competencies={competencies}
               onUpdateCompetencies={onUpdateCompetencies}
+              competencyMappings={competencyMappings}
+              onUpdateCompetencyMappings={onUpdateCompetencyMappings}
               onNavigate={onNavigate}
               onShowToast={onShowToast}
+              initialSubTab="library"
             />
           )}
 
           {activeTab === 'competency-mapping' && (
-            <CompetencyMappingView
-              mappings={competencyMappings}
-              onUpdateMappings={onUpdateCompetencyMappings}
+            <CompetenciesTab
               competencies={competencies}
+              onUpdateCompetencies={onUpdateCompetencies}
+              competencyMappings={competencyMappings}
+              onUpdateCompetencyMappings={onUpdateCompetencyMappings}
               onNavigate={onNavigate}
               onShowToast={onShowToast}
-              embedded
+              initialSubTab="mapping"
             />
           )}
 

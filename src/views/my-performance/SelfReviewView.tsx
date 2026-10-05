@@ -71,12 +71,11 @@ export const SelfReviewView: React.FC<SelfReviewViewProps> = ({
   const designation = 'Sales Executive';
   const jobLevel = 'Individual Contributor';
 
-  // Filter competencies based on department, designation, job level
+  // Filter competencies based on department only
   const relevantCompetencies = MOCK_COMPETENCIES.filter(
     (c) =>
-      c.department.toLowerCase() === department.toLowerCase() &&
-      c.designation.toLowerCase() === designation.toLowerCase() &&
-      c.jobLevel.toLowerCase() === jobLevel.toLowerCase()
+      c.department.toLowerCase() === department.toLowerCase() ||
+      c.department.toLowerCase() === 'all'
   );
 
   // Resolve overall questions through the same Question Template + Mapping

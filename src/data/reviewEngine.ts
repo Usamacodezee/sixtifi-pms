@@ -58,40 +58,26 @@ export const calculateRoleMatchScore = (
 };
 
 /**
- * Resolves the competency framework for a role using a fully generalized, hierarchical
- * wildcard engine. Seamlessly combines:
- * 1. Global / Company-Wide Competencies ("All" Departments, "All" Designations, "All" Levels)
- * 2. Department-Wide Competencies ("Department X", "All" Designations, "All" Levels)
- * 3. Level-Wide Competencies ("All" Departments, "All" Designations, "Job Level Y")
- * 4. Exact Role-Specific Competencies ("Department X", "Designation Z", "Job Level Y")
+ * Resolves the competency framework based on department (including "All" company-wide competencies).
  */
 export const getRelevantCompetencies = (
   department: string,
-  designation: string,
-  jobLevel: string,
+  _designation?: string,
+  _jobLevel?: string,
   allCompetencies: CompetencyConfig[] = MOCK_COMPETENCIES
 ): CompetencyConfig[] => {
-  const matched = allCompetencies
-    .map((c) => {
-      const match = calculateRoleMatchScore(
-        c.department,
-        c.designation,
-        c.jobLevel,
-        department,
-        designation,
-        jobLevel
-      );
-      return { competency: c, ...match };
-    })
-    .filter((res) => res.isMatch);
+  const norm = (v?: string) => (v || '').trim().toLowerCase();
+  const targetDept = norm(department);
 
-  // Sort by specificity score (Global base -> Dept general -> Level general -> Role specific)
-  matched.sort((a, b) => a.score - b.score);
+  const matched = allCompetencies.filter((c) => {
+    const d = norm(c.department);
+    return !d || d === 'all' || d === targetDept;
+  });
 
-  // Deduplicate by competency name/ID, retaining the highest specificity version if duplicated
+  // Deduplicate by competency name/ID
   const map = new Map<string, CompetencyConfig>();
-  matched.forEach((res) => {
-    map.set(res.competency.name.toLowerCase(), res.competency);
+  matched.forEach((c) => {
+    map.set(c.name.toLowerCase(), c);
   });
 
   return Array.from(map.values());

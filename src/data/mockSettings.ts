@@ -72,8 +72,8 @@ export const DEFAULT_GOAL_SETTINGS: GoalSettings = {
 };
 
 // The targeting chain this PMS is built around — reusable for any
-// organization's own department / designation / grade structure.
-export type TargetingScope = 'All Employees' | 'Specific Department' | 'Specific Designation' | 'Specific Grade' | 'Specific Job Level';
+// organization's own department structure.
+export type TargetingScope = 'All Employees' | 'Specific Department';
 
 export const GRADE_OPTIONS = ['Individual Contributor', 'Team Lead', 'Manager', 'Senior Manager', 'Director'];
 export const JOB_LEVEL_OPTIONS = GRADE_OPTIONS;
@@ -96,17 +96,15 @@ export const buildDefaultLevels = (): CompetencyLevel[] =>
 // used elsewhere in the PMS (Self/Manager/Final Review) — a rating is an
 // overall judgement of performance; a level is a competency benchmark.
 export interface CompetencyApplicability {
-  scopes: TargetingScope[]; // multiple scopes can be selected together
+  scopes: TargetingScope[]; // 'All Employees' | 'Specific Department'
   departments: string[];
-  designations: string[];
-  jobLevels: string[];
+  designations?: string[];
+  jobLevels?: string[];
 }
 
 export const EMPTY_APPLICABILITY: CompetencyApplicability = {
   scopes: ['All Employees'],
-  departments: [],
-  designations: [],
-  jobLevels: []
+  departments: []
 };
 
 export interface SettingsCompetency {
@@ -121,12 +119,10 @@ export interface SettingsCompetency {
 }
 
 export const applicabilitySummary = (a: CompetencyApplicability): string => {
-  if (!a || a.scopes.length === 0 || a.scopes.includes('All Employees')) return 'All Employees';
-  const parts: string[] = [];
-  if (a.scopes.includes('Specific Department') && a.departments.length > 0) parts.push(a.departments.join(', '));
-  if (a.scopes.includes('Specific Designation') && a.designations.length > 0) parts.push(a.designations.join(', '));
-  if ((a.scopes.includes('Specific Grade') || a.scopes.includes('Specific Job Level')) && a.jobLevels.length > 0) parts.push(a.jobLevels.join(', '));
-  return parts.length > 0 ? parts.join(' • ') : 'All Employees';
+  if (!a || a.scopes?.includes('All Employees') || !a.departments || a.departments.length === 0 || a.departments.includes('All')) {
+    return 'All Departments (Company-Wide)';
+  }
+  return a.departments.join(', ');
 };
 
 export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
@@ -137,7 +133,7 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
     category: 'Behavioral',
     status: 'Active',
     usedInRoles: 8,
-    applicability: { scopes: ['All Employees'], departments: [], designations: [], jobLevels: [] },
+    applicability: { scopes: ['All Employees'], departments: ['All'] },
     levels: [
       { level: 1, label: 'Developing', description: 'Needs guidance to recognize and respond to customer needs.' },
       { level: 2, label: 'Basic', description: 'Responds to routine customer requests with occasional support.' },
@@ -153,7 +149,7 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
     category: 'Behavioral',
     status: 'Active',
     usedInRoles: 12,
-    applicability: { scopes: ['All Employees'], departments: [], designations: [], jobLevels: [] },
+    applicability: { scopes: ['All Employees'], departments: ['All'] },
     levels: [
       { level: 1, label: 'Developing', description: 'Requires significant support to communicate effectively.' },
       { level: 2, label: 'Basic', description: 'Communicates routine information clearly with some guidance.' },
@@ -170,10 +166,8 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
     status: 'Active',
     usedInRoles: 4,
     applicability: {
-      scopes: ['Specific Designation', 'Specific Job Level'],
-      departments: [],
-      designations: ['Manager'],
-      jobLevels: ['Manager']
+      scopes: ['Specific Department'],
+      departments: ['Management']
     },
     levels: [
       { level: 1, label: 'Developing', description: 'Needs support to guide even small groups toward a goal.' },
@@ -190,7 +184,7 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
     category: 'Behavioral',
     status: 'Active',
     usedInRoles: 10,
-    applicability: { scopes: ['All Employees'], departments: [], designations: [], jobLevels: [] },
+    applicability: { scopes: ['All Employees'], departments: ['All'] },
     levels: [
       { level: 1, label: 'Developing', description: 'Needs guidance to identify the root cause of routine issues.' },
       { level: 2, label: 'Basic', description: 'Resolves familiar problems using established approaches.' },
@@ -207,10 +201,8 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
     status: 'Active',
     usedInRoles: 6,
     applicability: {
-      scopes: ['Specific Department', 'Specific Designation', 'Specific Job Level'],
-      departments: ['Engineering'],
-      designations: ['Software Engineer'],
-      jobLevels: ['Individual Contributor']
+      scopes: ['Specific Department'],
+      departments: ['Engineering']
     },
     levels: [
       { level: 1, label: 'Developing', description: 'Building foundational knowledge of core tools and systems.' },
@@ -227,7 +219,7 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
     category: 'Behavioral',
     status: 'Active',
     usedInRoles: 7,
-    applicability: { scopes: ['All Employees'], departments: [], designations: [], jobLevels: [] },
+    applicability: { scopes: ['All Employees'], departments: ['All'] },
     levels: [
       { level: 1, label: 'Developing', description: 'Needs reminders to follow through on commitments.' },
       { level: 2, label: 'Basic', description: 'Completes assigned tasks with occasional follow-up.' },
@@ -245,9 +237,7 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
     usedInRoles: 5,
     applicability: {
       scopes: ['Specific Department'],
-      departments: ['Engineering'],
-      designations: [],
-      jobLevels: []
+      departments: ['Engineering']
     },
     levels: [
       { level: 1, label: 'Developing', description: 'Works well within their immediate team with guidance.' },
@@ -265,10 +255,8 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
     status: 'Active',
     usedInRoles: 4,
     applicability: {
-      scopes: ['Specific Designation', 'Specific Job Level'],
-      departments: [],
-      designations: ['Manager'],
-      jobLevels: ['Manager']
+      scopes: ['Specific Department'],
+      departments: ['HR', 'Management']
     },
     levels: [
       { level: 1, label: 'Developing', description: 'Provides basic feedback when prompted.' },
@@ -283,8 +271,8 @@ export const MOCK_SETTINGS_COMPETENCIES: SettingsCompetency[] = [
 export interface CompetencyMapping {
   id: string;
   department: string;
-  designation: string;
-  jobLevel: string;
+  designation?: string;
+  jobLevel?: string;
   competencyIds: string[];
   status: 'Active' | 'Inactive';
 }
@@ -293,93 +281,56 @@ export const MOCK_COMPETENCY_MAPPINGS: CompetencyMapping[] = [
   {
     id: 'map-role-all',
     department: 'All',
-    designation: 'All',
-    jobLevel: 'All',
-    competencyIds: ['cfg-comp-1', 'cfg-comp-2'],
-    status: 'Active'
-  },
-  {
-    id: 'map-role-mgr-all',
-    department: 'All',
-    designation: 'All',
-    jobLevel: 'Manager',
-    competencyIds: ['cfg-comp-3', 'cfg-comp-8'],
+    competencyIds: ['cfg-comp-1', 'cfg-comp-2', 'cfg-comp-4', 'cfg-comp-6'],
     status: 'Active'
   },
   {
     id: 'map-role-1',
     department: 'Sales',
-    designation: 'Sales Executive',
-    jobLevel: 'Individual Contributor',
     competencyIds: ['cfg-comp-1', 'cfg-comp-2', 'cfg-comp-6'],
-    status: 'Active'
-  },
-  {
-    id: 'map-role-2',
-    department: 'Sales',
-    designation: 'Sales Manager',
-    jobLevel: 'Manager',
-    competencyIds: ['cfg-comp-3', 'cfg-comp-1', 'cfg-comp-2'],
     status: 'Active'
   },
   {
     id: 'map-role-3',
     department: 'Engineering',
-    designation: 'Software Engineer',
-    jobLevel: 'Individual Contributor',
     competencyIds: ['cfg-comp-5', 'cfg-comp-4', 'cfg-comp-7'],
-    status: 'Active'
-  },
-  {
-    id: 'map-role-4',
-    department: 'Engineering',
-    designation: 'Engineering Manager',
-    jobLevel: 'Manager',
-    competencyIds: ['cfg-comp-3', 'cfg-comp-5', 'cfg-comp-8'],
     status: 'Active'
   },
   {
     id: 'map-role-5',
     department: 'HR',
-    designation: 'HR Executive',
-    jobLevel: 'Individual Contributor',
-    competencyIds: ['cfg-comp-2', 'cfg-comp-6', 'cfg-comp-4'],
+    competencyIds: ['cfg-comp-2', 'cfg-comp-6', 'cfg-comp-8'],
+    status: 'Active'
+  },
+  {
+    id: 'map-role-mgr-all',
+    department: 'Management',
+    competencyIds: ['cfg-comp-3', 'cfg-comp-8'],
     status: 'Active'
   }
 ];
 
 /**
  * Frontend competency resolution lookup: collects competencies matching
- * department, designation, and job level (including "All" wildcards), as well as
- * company-wide global competencies.
+ * department (including "All" wildcard).
  */
 export const getCompetenciesForRole = (
   mappings: CompetencyMapping[],
   competencies: SettingsCompetency[],
   department: string,
-  designation: string,
-  jobLevel: string
+  _designation?: string,
+  _jobLevel?: string
 ): SettingsCompetency[] => {
   const norm = (v?: string) => (v || '').trim().toLowerCase();
   const isWildcard = (v?: string) => !v || norm(v) === 'all' || norm(v).startsWith('all ');
 
   const tDept = norm(department);
-  const tDesig = norm(designation);
-  const tLevel = norm(jobLevel);
 
-  // Find all active mappings that match the target role (exact or wildcard)
+  // Find all active mappings that match the target department (exact or wildcard)
   const matchedMappings = mappings.filter((m) => {
     if (m.status !== 'Active') return false;
-
     const mDept = norm(m.department);
-    const mDesig = norm(m.designation);
-    const mLevel = norm(m.jobLevel);
-
-    const deptOk = isWildcard(mDept) || mDept === tDept;
-    const desigOk = isWildcard(mDesig) || mDesig === tDesig;
-    const levelOk = isWildcard(mLevel) || mLevel === tLevel;
-
-    return deptOk && desigOk && levelOk;
+    return isWildcard(mDept) || mDept === tDept;
   });
 
   // Collect all competency IDs from matched mappings
@@ -388,15 +339,19 @@ export const getCompetenciesForRole = (
     m.competencyIds.forEach((id) => mappedCompetencyIds.add(id));
   });
 
-  // Also include active competencies that apply to All Employees via scope
-  const globalCompetencies = competencies.filter(
-    (c) => c.status === 'Active' && c.applicability?.scopes?.includes('All Employees')
-  );
+  // Also include active competencies that directly apply to All Employees or this department
+  const directCompetencies = competencies.filter((c) => {
+    if (c.status !== 'Active') return false;
+    const depts = (c.applicability?.departments || []).map(norm);
+    const isAllScope = c.applicability?.scopes?.includes('All Employees') || depts.includes('all') || depts.length === 0;
+    const matchesDept = depts.includes(tDept);
+    return isAllScope || matchesDept;
+  });
 
   const resultSet = new Map<string, SettingsCompetency>();
 
-  // Add global competencies first
-  globalCompetencies.forEach((c) => resultSet.set(c.id, c));
+  // Add direct competencies first
+  directCompetencies.forEach((c) => resultSet.set(c.id, c));
 
   // Add mapped competencies
   mappedCompetencyIds.forEach((id) => {
